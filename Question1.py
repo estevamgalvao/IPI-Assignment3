@@ -1,62 +1,61 @@
 def contraste(matriz, shape):
     cont = 0
-    for i in range(256):
-        for j in range(256):
+    for i in range(shape):
+        for j in range(shape):
             cont += (abs(i - j) ** 2) * matriz[i, j]
             if matriz[i, j] != 0:
                 print(i, j, matriz[i, j])
     return cont
 
 
-def energia(matriz):
+def energia(matriz, shape):
     energ = 0
-    for i in range(256):
-        for j in range(256):
+    for i in range(shape):
+        for j in range(shape):
             energ += matriz[i, j] ** 2
     return energ
 
 
-def homogenidade(matriz):
+def homogenidade(matriz, shape):
     homo = 0
-    for i in range(256):
-        for j in range(256):
+    for i in range(shape):
+        for j in range(shape):
             homo += matriz[i, j] / (1 + abs(i - j))
     return homo
 
 
-def correlacao(matriz):
+def correlacao(matriz, shape, dic):
     def valorLinha(linha, matriz):
         valor = 0
-        for j in range(256):
+        for j in range(shape):
             valor += matriz[linha, j]
         return valor
 
     def valorColuna(coluna, matriz):
         valor = 0
-        for i in range(256):
+        for i in range(shape):
             valor += matriz[i, coluna]
         return valor
 
     def pesosLinha(matriz):
         valor = 0
-        for i in range(1, 257):
+        for i in range(1, shape):
             valor += i * valorLinha(i - 1, matriz)
         return valor
 
     def pesosColuna(matriz):
         valor = 0
-        for j in range(1, 257):
+        for j in range(1, shape):
             valor += j * valorLinha(j - 1, matriz)
         return valor
 
     correla = 0
-    for i in range(256):
-        for j in range(256):
-            a = pesosLinha(glcmArray[0])
-            b = pesosColuna(glcmArray[0])
+    for i in range(shape):
+        for j in range(shape):
+            a = pesosLinha(dic)
+            b = pesosColuna(dic)
             correla += (((i - a) * (j - b)) * matriz[i, j]) / (a * b)
     return correla
-
 
 
 import cv2
@@ -70,21 +69,13 @@ if adress == 'a':
     adress = "/home/estevamgalvao/Documentos/PycharmProjects/IPI-Assignment3/images"
 adress += '/*.tif'
 
-
-
 # Leio as imagens da pasta e salvo em uma lista. Logo após recupero o número de imagens lidas #
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
 numImage = len(imageArray)
 
-
-
-
 image = imageArray[0]
 height, width, channels = image.shape
 glcmArray = []
-
-
-
 
 for image in imageArray:
     image = RGB2Greyscale(image)
@@ -125,7 +116,7 @@ for n, i in zip(listHistogram,range(auxShape)):
 
 print(matrixGLCM)
 # print(matrixGLCM[:, :])
-print(contraste(matrixGLCM))
-print(energia(matrixGLCM))
-print(homogenidade(matrixGLCM))
-print(correlacao(matrixGLCM))
+print(contraste(matrixGLCM, auxShape))
+print(energia(matrixGLCM, auxShape))
+print(homogenidade(matrixGLCM, auxShape))
+# print(correlacao(matrixGLCM, auxShape, dicGLCM))
