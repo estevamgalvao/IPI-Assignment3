@@ -3,6 +3,11 @@ import numpy as np
 import glob
 import os
 from functions.rgb_greyscale import RGB2Greyscale
+import functions
+from functions.featuresExtraction import *
+
+
+
 
 adress = input("Adress: ")
 if adress == 'a':
@@ -53,3 +58,4 @@ for image in imageArray:
     arrayImage_Histogram.append(imageHistogram)
     arrayGLCM_Matrix.append(matrixGLCM)
     print(matrixGLCM)
+
