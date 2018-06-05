@@ -1,18 +1,19 @@
 import cv2
 import numpy as np
 import glob
-import os
 from functions.rgb_greyscale import RGB2Greyscale
-import functions
 from functions.featuresExtraction import *
 
-
-
-
 adress = input("Adress: ")
-if adress == 'a':
+typeImg = input("Type of: ")
+
+if adress == '':
     adress = "/home/estevamgalvao/Documentos/PycharmProjects/IPI-Assignment3/images"
-adress += '/*.tif'
+
+if typeImg == '':
+    adress += '/*.tif'
+else:
+    adress += '/*' + typeImg
 
 # Leio as imagens da pasta e salvo em uma lista. Logo após recupero o número de imagens lidas #
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
@@ -43,15 +44,15 @@ for image in imageArray:
                 listHistogram.insert(0, image[i, j])
 
     auxShape = len(listHistogram)
-    print(listHistogram)
-    print(imageHistogram)
 
-    matrixGLCM = np.zeros((auxShape, auxShape), dtype = np.uint8)
+    matrixGLCM = np.zeros((auxShape, auxShape), dtype = np.int64)
 
     for n, i in zip(listHistogram,range(auxShape)):
         for m, j in zip(listHistogram, range(auxShape)):
             # print("N:", n, "i:", i, "M:", m, "j:", j)
             if (n, m) in glcmDictionary:
+                # Talvez tenha que criar tuplas aqui se os índices da GLCM forem intensidades de pixels
+                # matrixGLCM[i, j] = (n, m, glcmDictionary[(n, m)]) -> tipo esse -> (i, j, glcm(i, j))
                 matrixGLCM[i, j] = glcmDictionary[(n, m)]
 
     arrayGLCM_Dictionary.append(glcmDictionary)
@@ -59,3 +60,19 @@ for image in imageArray:
     arrayGLCM_Matrix.append(matrixGLCM)
     print(matrixGLCM)
 
+    print("Contrast:", contrast(matrixGLCM))
+    print("Correlation:", correlation(matrixGLCM))
+    print("Energy:", energy(matrixGLCM))
+    print("Homogeneity:", homogeneity(matrixGLCM))
+
+#     matrixGLCM = np.array((
+# [[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+#  [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+#  [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+#  [0, 0, 1, 9, 1, 0, 0, 0, 0, 0],
+#  [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+#  [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+#  [0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
+#  [0, 0, 0, 0, 0, 0, 1, 9, 1, 0],
+#  [0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+#  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]), dtype= np.int64)

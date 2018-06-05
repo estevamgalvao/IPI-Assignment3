@@ -40,8 +40,8 @@ def correlation(matrix):
         listSumI.append(sumI)
         listSumJ.append(sumJ)
 
-    print(len(listSumI) == height)
-    print(len(listSumJ) == width)
+    # print(len(listSumI) == height)
+    # print(len(listSumJ) == width)
 
     averageSumI = 0
     averageSumJ = 0
