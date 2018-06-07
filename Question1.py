@@ -13,7 +13,7 @@ if adress == '':
 if typeImg == '':
     adress += '/*.tif'
 else:
-    adress += '/*' + typeImg
+    adress += '/*.' + typeImg
 
 # Leio as imagens da pasta e salvo em uma lista. Logo após recupero o número de imagens lidas #
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
@@ -42,10 +42,11 @@ for image in imageArray:
             else:
                 imageHistogram[image[i, j]] = 1
                 listHistogram.insert(0, image[i, j])
+    listHistogram.sort()
 
     auxShape = len(listHistogram)
 
-    matrixGLCM = np.zeros((auxShape, auxShape), dtype = np.int64)
+    matrixGLCM = np.zeros((auxShape, auxShape), dtype = np.float64)
 
     for n, i in zip(listHistogram,range(auxShape)):
         for m, j in zip(listHistogram, range(auxShape)):
@@ -56,10 +57,17 @@ for image in imageArray:
                 matrixGLCM[i, j] = glcmDictionary[(n, m)]
 
     arrayGLCM_Dictionary.append(glcmDictionary)
+    # print()
+    # print(glcmDictionary)
+    # print()
     arrayImage_Histogram.append(imageHistogram)
+    # print()
+    # print(listHistogram)
+    # print()
     arrayGLCM_Matrix.append(matrixGLCM)
     print(matrixGLCM)
-
+    matrixGLCM /= np.sum(matrixGLCM)
+    
     print("Contrast:", contrast(matrixGLCM))
     print("Correlation:", correlation(matrixGLCM))
     print("Energy:", energy(matrixGLCM))
