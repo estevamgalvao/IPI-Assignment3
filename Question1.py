@@ -4,6 +4,8 @@ import glob
 from functions.rgb_greyscale import RGB2Greyscale
 from functions.featuresExtraction import *
 
+#/home/estevamgalvao/Documentos/UnB/5º Semestre/Introdução ao Processamento de Imagens/ImageProcessing/Assignments/Assignment 3/Images/train
+
 adress = input("Adress: ")
 typeImg = input("Type of: ")
 
@@ -26,8 +28,10 @@ arrayGLCM_Matrix = []
 arrayImage_Histogram = []
 
 listHistogram = []
-for image in imageArray:
-    image = RGB2Greyscale(image)
+T = 1
+for k in range(numImage):
+    print(k+1)
+    image = RGB2Greyscale(imageArray[k])
     glcmDictionary = {}
     imageHistogram = {}
     for i, x in zip(range(height), range(height)):
@@ -57,30 +61,24 @@ for image in imageArray:
                 matrixGLCM[i, j] = glcmDictionary[(n, m)]
 
     arrayGLCM_Dictionary.append(glcmDictionary)
-    # print()
-    # print(glcmDictionary)
-    # print()
     arrayImage_Histogram.append(imageHistogram)
-    # print()
-    # print(listHistogram)
-    # print()
     arrayGLCM_Matrix.append(matrixGLCM)
-    print(matrixGLCM)
-    matrixGLCM /= np.sum(matrixGLCM)
-    
-    print("Contrast:", contrast(matrixGLCM))
-    print("Correlation:", correlation(matrixGLCM))
-    print("Energy:", energy(matrixGLCM))
-    print("Homogeneity:", homogeneity(matrixGLCM))
 
-#     matrixGLCM = np.array((
-# [[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-#  [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-#  [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-#  [0, 0, 1, 9, 1, 0, 0, 0, 0, 0],
-#  [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-#  [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-#  [0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
-#  [0, 0, 0, 0, 0, 0, 1, 9, 1, 0],
-#  [0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-#  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]), dtype= np.int64)
+    # print(matrixGLCM)
+    matrixGLCM /= np.sum(matrixGLCM)
+
+    if k+1 > 25 and k+1 <= 50:
+        T = 2
+    elif k+1 > 50:
+        T = 3
+    b = "   "
+    featuresFile = open("featuresFile.txt", "a")
+    featuresFile.write(str(k+1) + b + str(contrast(matrixGLCM)) + b + str(correlation(matrixGLCM))
+                       + b + str(energy(matrixGLCM)) + b + str(homogeneity(matrixGLCM)) + b + str(T) + "\n")
+    # featuresFile.write()
+    # print("Contrast:", contrast(matrixGLCM))
+    # print("Correlation:", correlation(matrixGLCM))
+    # print("Energy:", energy(matrixGLCM))
+    # print("Homogeneity:", homogeneity(matrixGLCM))
+    listHistogram = []
+featuresFile.close()

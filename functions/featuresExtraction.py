@@ -1,3 +1,5 @@
+import numpy as np
+
 def contrast(matrix):
     height, width = matrix.shape
     sumContrast = 0
@@ -33,12 +35,13 @@ def correlation(matrix):
     sumI = 0
     standardDeviationJ = 0
 
-    for i, y in zip(range(height), range(width)):
-        for j, x in zip(range(width), range(height)):
-            sumI += matrix[i, j]
-            sumJ += matrix[x, y]
+    for i, j in zip(range(height), range(width)):
+        sumI = np.sum(matrix[i, :])
+        sumJ = np.sum(matrix[:, j])
         listSumI.append(sumI)
         listSumJ.append(sumJ)
+        sumI = 0
+        sumJ = 0
 
     # print(len(listSumI) == height)
     # print(len(listSumJ) == width)
@@ -46,24 +49,24 @@ def correlation(matrix):
     averageSumI = 0
     averageSumJ = 0
 
-    for i in range(height):
-        averageSumI += i * (listSumI[i])
-    for j in range(width):
-        averageSumJ += j * (listSumJ[j])
+    for i in range(1, height+1):
+        averageSumI += i * (listSumI[i-1])
+    for j in range(1, width+1):
+        averageSumJ += j * (listSumJ[j-1])
 
     sumAux = 0
-    for i in range(height):
-        sumAux += ((i - averageSumI)**2) * listSumI[i]
+    for i in range(1, height+1):
+        sumAux += ((i - averageSumI)**2) * listSumI[i - 1]
     standardDeviationI = sumAux**(1/2)
     sumAux = 0
-    for j in range(width):
-        sumAux += ((j - averageSumJ)**2) * listSumJ[j]
+    for j in range(1, width+1):
+        sumAux += ((j - averageSumJ)**2) * listSumJ[j - 1]
     standardDeviationJ = sumAux**(1/2)
 
     sumCorrelation = 0
-    for i in range(height):
-        for j in range(width):
-            sumCorrelation += ((i - averageSumI) * (j - averageSumJ) * matrix[i, j])/\
+    for i in range(1, height+1):
+        for j in range(1, width+1):
+            sumCorrelation += ((i - averageSumI) * (j - averageSumJ) * matrix[i-1, j-1])/\
                               (standardDeviationI * standardDeviationJ)
     return sumCorrelation
 
