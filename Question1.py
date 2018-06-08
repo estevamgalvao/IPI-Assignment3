@@ -1,17 +1,15 @@
 import cv2
-import numpy as np
 import glob
 from functions.rgb_greyscale import RGB2Greyscale
 from functions.featuresExtraction import *
+from functions.glcm import *
 
 #/home/estevamgalvao/Documentos/UnB/5º Semestre/Introdução ao Processamento de Imagens/ImageProcessing/Assignments/Assignment 3/Images/train
 
 adress = input("Adress: ")
 typeImg = input("Type of: ")
-
 if adress == '':
     adress = "/home/estevamgalvao/Documentos/PycharmProjects/IPI-Assignment3/images"
-
 if typeImg == '':
     adress += '/*.tif'
 else:
@@ -21,64 +19,60 @@ else:
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
 numImage = len(imageArray)
 
-height, width, channels = imageArray[0].shape
+featuresArray = []
+auxList = []
 
-arrayGLCM_Dictionary = []
-arrayGLCM_Matrix = []
-arrayImage_Histogram = []
-
-listHistogram = []
-T = 1
 for k in range(numImage):
     print(k+1)
     image = RGB2Greyscale(imageArray[k])
-    glcmDictionary = {}
-    imageHistogram = {}
-    for i, x in zip(range(height), range(height)):
-        for j, y in zip(range(width), range(width - 1)):
-            pixelPair = (image[x, y], image[x, y + 1])
-            if pixelPair in glcmDictionary:
-                glcmDictionary[pixelPair] += 1
-            else:
-                glcmDictionary[pixelPair] = 1
-            if image[i, j] in imageHistogram:
-                imageHistogram[image[i, j]] += 1
-            else:
-                imageHistogram[image[i, j]] = 1
-                listHistogram.insert(0, image[i, j])
-    listHistogram.sort()
-
-    auxShape = len(listHistogram)
-
-    matrixGLCM = np.zeros((auxShape, auxShape), dtype = np.float64)
-
-    for n, i in zip(listHistogram,range(auxShape)):
-        for m, j in zip(listHistogram, range(auxShape)):
-            # print("N:", n, "i:", i, "M:", m, "j:", j)
-            if (n, m) in glcmDictionary:
-                # Talvez tenha que criar tuplas aqui se os índices da GLCM forem intensidades de pixels
-                # matrixGLCM[i, j] = (n, m, glcmDictionary[(n, m)]) -> tipo esse -> (i, j, glcm(i, j))
-                matrixGLCM[i, j] = glcmDictionary[(n, m)]
-
-    arrayGLCM_Dictionary.append(glcmDictionary)
-    arrayImage_Histogram.append(imageHistogram)
-    arrayGLCM_Matrix.append(matrixGLCM)
-
     # print(matrixGLCM)
+    matrixGLCM = GLCM_Mounter(image)
     matrixGLCM /= np.sum(matrixGLCM)
 
-    if k+1 > 25 and k+1 <= 50:
-        T = 2
-    elif k+1 > 50:
-        T = 3
-    b = "   "
-    featuresFile = open("featuresFile.txt", "a")
-    featuresFile.write(str(k+1) + b + str(contrast(matrixGLCM)) + b + str(correlation(matrixGLCM))
-                       + b + str(energy(matrixGLCM)) + b + str(homogeneity(matrixGLCM)) + b + str(T) + "\n")
-    # featuresFile.write()
-    # print("Contrast:", contrast(matrixGLCM))
-    # print("Correlation:", correlation(matrixGLCM))
-    # print("Energy:", energy(matrixGLCM))
-    # print("Homogeneity:", homogeneity(matrixGLCM))
-    listHistogram = []
-featuresFile.close()
+    features = allFeatures(matrixGLCM)
+    # print(features)
+    featuresArray.append(features)
+# featuresArray.append([1, 1.1, 1.2, 1.3])
+
+print()
+print()
+# print(featuresArray)
+featuresArray = np.array(featuresArray, dtype = np.float64)
+
+# aC = np.corrcoef(featuresArray[:26, 0], featuresArray[:26, 1])
+# auxList.append(aC[0, 1])
+
+print(np.corrcoef(featuresArray[:, 1], featuresArray[:, 0]))
+
+for type in range(3):
+    if type == 1:
+        relationConCor = np.corrcoef(featuresArray[:26, 0], featuresArray[:26, 1])
+        relationConEne = np.corrcoef(featuresArray[:26, 0], featuresArray[:26, 2])
+        relationConHom = np.corrcoef(featuresArray[:26, 0], featuresArray[:26, 3])
+        relationCorEne = np.corrcoef(featuresArray[:26, 1], featuresArray[:26, 2])
+        relationCorHom = np.corrcoef(featuresArray[:26, 1], featuresArray[:26, 3])
+        relationEneHom = np.corrcoef(featuresArray[:26, 2], featuresArray[:26, 3])
+    elif type == 2:
+        relationConCor = np.corrcoef(featuresArray[26:51, 0], featuresArray[26:51, 1])
+        relationConEne = np.corrcoef(featuresArray[26:51, 0], featuresArray[26:51, 2])
+        relationConHom = np.corrcoef(featuresArray[26:51, 0], featuresArray[26:51, 3])
+        relationCorEne = np.corrcoef(featuresArray[26:51, 1], featuresArray[26:51, 2])
+        relationCorHom = np.corrcoef(featuresArray[26:51, 1], featuresArray[26:51, 3])
+        relationEneHom = np.corrcoef(featuresArray[26:51, 2], featuresArray[26:51, 3])
+    else:
+        relationConCor = np.corrcoef(featuresArray[51:, 0], featuresArray[51:, 1])
+        relationConEne = np.corrcoef(featuresArray[51:, 0], featuresArray[51:, 2])
+        relationConHom = np.corrcoef(featuresArray[51:, 0], featuresArray[51:, 3])
+        relationCorEne = np.corrcoef(featuresArray[51:, 1], featuresArray[51:, 2])
+        relationCorHom = np.corrcoef(featuresArray[51:, 1], featuresArray[51:, 3])
+        relationEneHom = np.corrcoef(featuresArray[51:, 2], featuresArray[51:, 3])
+    auxList = [abs(relationConCor[0, 1]), abs(relationConEne[0, 1]), abs(relationConHom[0, 1]), abs(relationCorEne[0, 1]), abs(relationCorHom[0, 1]), abs(relationEneHom[0, 1])]
+    print(auxList)
+    print()
+greatestRelation = (auxList[0], 0)
+for r in range(1, len(auxList)):
+    if auxList[r] > greatestRelation[0]:
+        greatestRelation = (auxList[r], r)
+print(greatestRelation)
+
+# Característica a ser excluída = auxList[greatesRelation(1)]
