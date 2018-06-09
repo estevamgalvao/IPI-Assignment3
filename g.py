@@ -79,7 +79,7 @@ trainFeaturesArray = np.array(trainFeaturesArray, dtype = np.float64)
 
 
 
-testFeaturesArray = [[6.38044560e+01, 9.80553496e-01, 4.97879166e-04, 0.00000000e+00],
+testFeaturesArray = [[3.21061321e+02, 8.96041364e-01, 2.04813023e-04, 0.00000000e+00],
  [3.62183390e+02, 8.37951381e-01, 2.25757036e-04, 0.00000000e+00],
  [3.02827137e+02, 8.25157130e-01, 2.16338249e-04, 0.00000000e+00],
  [3.60799896e+02, 8.46396879e-01, 2.24661890e-04, 0.00000000e+00],
@@ -160,52 +160,56 @@ confusionMatrix = np.array((
                 [0, 0, 0],
                 [0, 0, 0]]), dtype= np.uint8)
 
-auxList = []
-
 height, width = testFeaturesArray.shape
 print(height)
-
+distanceList = []
 for i in range(height):
     resultFeaturesArray = (trainFeaturesArray - testFeaturesArray[i, :])**2
     if i < 25:
-        flag = 0
+        flag2 = 0
     elif i > 25 and i < 51:
-        flag = 1
+        flag2 = 1
     else:
-        flag = 2
+        flag2 = 2
+
     for j in range(height):
-        distance = (np.sum(resultFeaturesArray[j, :]))**(1/2)
-        auxList.append(distance)
-    distanceAsphalt = auxList[:25]
-    # print(len(distanceAsphalt))
-    distanceDanger = auxList[25:50]
-    # print(len(distanceDanger))
-    distanceGrass = auxList[50:]
-    # print(len(distanceGrass))
+        if j < 25:
+            flag = 0
+        elif j > 25 and j < 51:
+            flag = 1
+        else:
+            flag = 2
+        distance = (np.sum(resultFeaturesArray[j, :3]))**(1/2)
+
+        distanceList.append((distance, flag))
+    distanceAsphalt = distanceList[:25]
+
+    distanceDanger = distanceList[25:50]
+
+    distanceGrass = distanceList[50:]
+
     distanceAsphalt.sort()
     distanceDanger.sort()
     distanceGrass.sort()
+    distanceList.sort()
+
     asphaltCounter = 0
     dangerCounter = 0
     grassCounter = 0
-    for counter in range(25):
-        auxList = [(distanceAsphalt[counter], 1), (distanceDanger[counter], 2), (distanceGrass[counter], 3)]
-        auxList.sort()
-        if auxList[0][1] == 1:
+    for counter in range(1):
+        # print(len(distanceList))
+        # auxList = [(distanceAsphalt[counter], 1), (distanceDanger[counter], 2), (distanceGrass[counter], 3)]
+        # auxList.sort()
+        if distanceList[counter][1] == 0:
             asphaltCounter += 1
-        elif auxList[0][1] == 2:
+        elif distanceList[counter][1] == 1:
             dangerCounter += 1
-        else:
+        elif distanceList[counter][1] == 2:
             grassCounter += 1
     auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
     auxList.sort()
-    # print(auxList)
-    # input()
-    confusionMatrix[auxList[2][1], flag] += 1
-    # print(auxList[2][1])
-    # print(flag)
-    # print(confusionMatrix)
-    # input()
-    auxList = []
+    confusionMatrix[auxList[2][1], flag2] += 1
+    distanceList = []
 
+# print(len(distanceList))
 print(confusionMatrix)
