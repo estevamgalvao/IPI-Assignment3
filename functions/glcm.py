@@ -24,7 +24,7 @@ def GLCM_Mounter(image):
     listHistogram, imageHistogram, glcmDictionary = GLCM_HistDictionary(image)
     auxShape = len(listHistogram)
 
-    matrixGLCM = np.zeros((auxShape, auxShape), dtype=np.float64)
+    matrixGLCM = np.zeros((auxShape, auxShape), dtype=np.float32)
 
     for n, i in zip(listHistogram, range(auxShape)):
         for m, j in zip(listHistogram, range(auxShape)):

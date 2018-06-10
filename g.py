@@ -183,9 +183,7 @@ for i in range(height):
 
         distanceList.append((distance, flag))
     distanceAsphalt = distanceList[:25]
-
     distanceDanger = distanceList[25:50]
-
     distanceGrass = distanceList[50:]
 
     distanceAsphalt.sort()
@@ -197,9 +195,6 @@ for i in range(height):
     dangerCounter = 0
     grassCounter = 0
     for counter in range(1):
-        # print(len(distanceList))
-        # auxList = [(distanceAsphalt[counter], 1), (distanceDanger[counter], 2), (distanceGrass[counter], 3)]
-        # auxList.sort()
         if distanceList[counter][1] == 0:
             asphaltCounter += 1
         elif distanceList[counter][1] == 1:
@@ -211,5 +206,4 @@ for i in range(height):
     confusionMatrix[auxList[2][1], flag2] += 1
     distanceList = []
 
-# print(len(distanceList))
 print(confusionMatrix)
