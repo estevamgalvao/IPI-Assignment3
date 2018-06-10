@@ -1,5 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
+# Faço a relação de todas as features entre os três tipos de terreno #
+# 1 = Asfalto, primeiras 25 imagens #
+# 2 = Perigo, próximas 25 imagens #
+# 3 = Grama, próximas 25 imagens #
+# Com esses valores, seleciono o maior valor de cada terreno e identifico a característica em comum nas 3 relações, então a elimino #
+
 def featureRelation(featuresArray):
     for type in range(3):
         if type == 1:
@@ -37,9 +44,10 @@ def featureRelation(featuresArray):
     greatestRelation2 = relationList2[5]
     greatestRelation3 = relationList3[5]
 
-    print("Greatest Relation Asphalt:", greatestRelation1)
-    print("Greatest Relation Danger:", greatestRelation2)
-    print("Greatest Relation Grass:", greatestRelation3)
+    print("Greatest Relation Asphalt: \nValue:[",greatestRelation1[0],"]  Relation[",greatestRelation1[1],"]")
+    print("Greatest Relation Danger: \nValue:[",greatestRelation2[0],"]  Relation[",greatestRelation2[1],"]")
+    print("Greatest Relation Grass: \nValue:[",greatestRelation3[0],"]  Relation[",greatestRelation3[1],"]")
+    print()
 
     # Contraste e Correlação #
     plt.scatter(featuresArray[:26, 0], featuresArray[:26, 1], color='blue')

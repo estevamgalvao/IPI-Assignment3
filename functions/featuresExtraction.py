@@ -110,11 +110,6 @@ def allFeatures(matrix, exclude = 0):
 
     return [sumContrast, sumCorrelation, sumEnergy, sumHomogeneity]
 
-
-
-
-
-
 def featuresWriter(imageNumber,contrast, correlation, energy, homogeneity):
     if imageNumber + 1 > 25 and imageNumber + 1 <= 50:
         T = "D2"

@@ -1,4 +1,7 @@
 import numpy as np
+import datetime
+a = datetime.datetime.now()
+# ...wait a while...
 
 trainFeaturesArray = [[4.07322962e+02, 8.66683290e-01, 1.76446580e-04, 1.82157475e-01],
  [1.71112046e+02, 9.32020007e-01, 3.98442505e-04, 2.64235503e-01],
@@ -194,7 +197,7 @@ for i in range(height):
     asphaltCounter = 0
     dangerCounter = 0
     grassCounter = 0
-    for counter in range(26):
+    for counter in range(15):
         if distanceList[counter][1] == 0:
             asphaltCounter += 1
         elif distanceList[counter][1] == 1:
@@ -206,4 +209,17 @@ for i in range(height):
     confusionMatrix[auxList[2][1], flag2] += 1
     distanceList = []
 
+precision = float((confusionMatrix[0, 0] + confusionMatrix[1,1] + confusionMatrix[2, 2])/np.sum(confusionMatrix))
+
 print(confusionMatrix)
+print("\nReal           \tAsphalt\tDanger\tGrass")
+print("Classified")
+print("Asphalt\t        %d\t    %d\t    %d" %(confusionMatrix[0,0], confusionMatrix[0,1], confusionMatrix[0,2]))
+print("Danger\t        %d\t    %d\t    %d" %(confusionMatrix[1,0], confusionMatrix[1,1], confusionMatrix[1,2]))
+print("Grass\t        %d\t    %d\t    %d" %(confusionMatrix[2,0], confusionMatrix[2,1], confusionMatrix[2,2]))
+print("\nPrecision: %.2f%%" %(precision))
+b = datetime.datetime.now()
+
+# print((b.hour-a.hour),"h",(b.minute-a.minute),"m",(b.second-a.second),"s")
+
+print("O programa levou %d horas, %d minutos e %d segundos para executar"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))

@@ -1,23 +1,42 @@
 import cv2
 import numpy as np
 from functions.rgb_greyscale import RGB2Greyscale
+import datetime
+from functions.miscellaneous import *
 
-img = cv2.imread("/home/estevamgalvao/Documentos/PycharmProjects/IPI-Assignment3/images/t.tif")
-cv2.imshow('T', img)
-cv2.waitKey(0)
+adress = input("Adress: ")
+type   = input("Type: ")
+adress = confirmAdress(adress, type)
+print(adress)
 
-img = RGB2Greyscale(img)
 
-height, width = img.shape
-print(height, width)
-print("Sum Total: ", np.sum(img))
+## 24 hour format ##
+# print (time.strftime("%H:%M:%S")-time.strftime("%H:%M:%S"))
+a = datetime.datetime.now()
+# ...wait a while...
+b = datetime.datetime.now()
+print(b-a)
 
-for i, j in zip(range(height), range(width)):
-    print(np.sum(img[i, :]))
-    print(np.sum(img[:, j]))
-for j in range(width):
-    pass
-    # print(img[i, j, 0])
+
+
+
+#
+# img = cv2.imread("/home/estevamgalvao/Documentos/PycharmProjects/IPI-Assignment3/images/t.tif")
+# cv2.imshow('T', img)
+# cv2.waitKey(0)
+#
+# img = RGB2Greyscale(img)
+#
+# height, width = img.shape
+# print(height, width)
+# print("Sum Total: ", np.sum(img))
+#
+# for i, j in zip(range(height), range(width)):
+#     print(np.sum(img[i, :]))
+#     print(np.sum(img[:, j]))
+# for j in range(width):
+#     pass
+#     # print(img[i, j, 0])
 
 
 
@@ -38,22 +57,22 @@ for j in range(width):
     #     print()
     #     for feature in glcm:
     #         print(feature)
-
-matrixGLCM = np.array((
-    [[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 9, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 9, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]), dtype= np.float64)
-confusionMatrix = np.array((
-               [[0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]]), dtype= np.uint8)
+#
+# matrixGLCM = np.array((
+#     [[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 1, 9, 1, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 1, 9, 1, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]), dtype= np.float64)
+# confusionMatrix = np.array((
+#                [[0, 0, 0],
+#                 [0, 0, 0],
+#                 [0, 0, 0]]), dtype= np.uint8)
 
 #matriz glcm
 #featureExtraction
