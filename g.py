@@ -194,7 +194,7 @@ for i in range(height):
     asphaltCounter = 0
     dangerCounter = 0
     grassCounter = 0
-    for counter in range(1):
+    for counter in range(26):
         if distanceList[counter][1] == 0:
             asphaltCounter += 1
         elif distanceList[counter][1] == 1:
