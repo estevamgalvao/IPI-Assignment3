@@ -15,24 +15,10 @@ External modules used:
 
 ### Results
 
-         - CONFUSION MATRIX - 
-
-Real           	Asphalt	Danger	Grass
-Classified
-Asphalt	        13	    3	    4
-Danger	        4	    14	    5
-Grass	        8	    8	    16
-
 Precision: 0.57%
 
-          - SAFETY MATRIX - 
-
-Real           	Safe	Unsafe
-Classified
-Safe	        13	    7
-Unsafe	        12	    43
-
 F-Measure Safe: 0.58%
+
 F-Measure Unsafe: 0.82%
 
 The program took 0 hours, 3 minutes and 43 seconds to finish the classification
@@ -49,4 +35,5 @@ The program took 0 hours, 3 minutes and 43 seconds to finish the classification
 ## Acknowledgments
 
 * Task proposed by professor: Alexandre Zaghetto - [zaghetto](https://github.com/zaghetto)
+
 
