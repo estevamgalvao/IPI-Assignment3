@@ -32,7 +32,7 @@ The program took 0 hours, 3 minutes and 43 seconds to finish the classification
 * [K-nearest Neighbors](https://medium.com/@adi.bronshtein/a-quick-introduction-to-k-nearest-neighbors-algorithm-62214cea29c7)
 * [Gustavo Monteiro Menezes - TCC](http://bdm.unb.br/handle/10483/15601)
 
-## Acknowledgments
+## Complementary Information
 
 * Task proposed by professor: Alexandre Zaghetto - [zaghetto](https://github.com/zaghetto)
 
