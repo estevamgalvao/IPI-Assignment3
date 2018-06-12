@@ -4,15 +4,16 @@ import datetime
 
 from functions.rgb_greyscale import RGB2Greyscale
 from functions.featureSelection import featureRelation
+from functions.fmeasure import F_measure
 from functions.featuresExtraction import *
 from functions.glcm import *
 from functions.miscellaneous import *
 
 #/home/estevamgalvao/Documentos/UnB/5º Semestre/Introdução ao Processamento de Imagens/ImageProcessing/Assignments/Assignment 3/Images/train
-a = datetime.datetime.now()
 
 adress = input("Train images adress: ")
 typeImg = input("Train images type: ")
+a = datetime.datetime.now()
 adress = confirmAdress(adress, typeImg)
 
 # Leio as imagens da pasta e salvo em uma lista. Logo após recupero o número de imagens lidas #
@@ -40,13 +41,11 @@ trainFeaturesArray = np.array(trainFeaturesArray, dtype = np.float32)
 # print(trainFeaturesArray)
 
 # Descubro qual feature devo ignorar #
-
 featureRelation(trainFeaturesArray)
 
 adress = input("Test images adress: ")
 typeImg = input("Test images type: ")
 adress = confirmAdress(adress, typeImg)
-print(adress)
 
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
 numImage = len(imageArray)
@@ -69,10 +68,13 @@ testFeaturesArray = np.array(testFeaturesArray, dtype = np.float32)
 # CÁLCULO DAS DISTÂNCIAS E CLASSIFICAÇÃO DAS IMAGENS #
 ######################################################
 
-confusionMatrix = np.array((
-               [[0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]]), dtype= np.uint8)
+# confusionMatrix = np.array((
+#                [[0, 0, 0],
+#                 [0, 0, 0],
+#                 [0, 0, 0]]), dtype= np.uint8)
+
+confusionMatrix = np.zeros((3, 3), dtype=np.uint8)
+
 height, width = testFeaturesArray.shape
 
 distanceList = []
@@ -115,19 +117,50 @@ for i in range(height):
     asphaltCounter = 0
     dangerCounter = 0
     grassCounter = 0
-    for counter in range(8): # Vou contando o número de vizinhos perto do ponto que está sendo classificado #
-        if distanceList[counter][1] == 0:
-            asphaltCounter += 1
-        elif distanceList[counter][1] == 1:
-            dangerCounter += 1
-        elif distanceList[counter][1] == 2:
-            grassCounter += 1
-    auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
-    auxList.sort()
-    confusionMatrix[auxList[2][1], flagTrue] += 1 # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
-    distanceList = []
-
+    # Com os ifs consigo selecionar o melhor cenário de vizinhos para cada tipo de classe
+    if flagTrue == 0:
+        for counter in range(15): # Vou contando o número de vizinhos perto do ponto que está sendo classificado #
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[auxList[2][1], flagTrue] += 1 # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
+        distanceList = []
+    elif flagTrue == 1:
+        for counter in range(8):  # Vou contando o número de vizinhos perto do ponto que está sendo classificado #
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[
+            auxList[2][1], flagTrue] += 1  # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
+        distanceList = []
+    else:
+        for counter in range(9):  # Vou contando o número de vizinhos perto do ponto que está sendo classificado #
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[
+            auxList[2][1], flagTrue] += 1  # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
+        distanceList = []
 b = datetime.datetime.now()
 
+safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
+
 printConfusionMatrix(confusionMatrix)
+printSafetyMatrix(safetyMatrix, F_measureSafe, F_measureUnsafe)
+
 print("The program took %d hours, %d minutes and %d seconds to finish the classification"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))

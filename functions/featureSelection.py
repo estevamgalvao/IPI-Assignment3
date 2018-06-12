@@ -44,9 +44,10 @@ def featureRelation(featuresArray):
     greatestRelation2 = relationList2[5]
     greatestRelation3 = relationList3[5]
 
-    print("Greatest Relation Asphalt: \nValue:[",greatestRelation1[0],"]  Relation[",greatestRelation1[1],"]")
-    print("Greatest Relation Danger: \nValue:[",greatestRelation2[0],"]  Relation[",greatestRelation2[1],"]")
-    print("Greatest Relation Grass: \nValue:[",greatestRelation3[0],"]  Relation[",greatestRelation3[1],"]")
+    print("- Greatest Relations -")
+    print("Asphalt: \nValue:[",greatestRelation1[0],"]  Relation[",greatestRelation1[1],"]")
+    print("Danger: \nValue:[",greatestRelation2[0],"]  Relation[",greatestRelation2[1],"]")
+    print("Grass: \nValue:[",greatestRelation3[0],"]  Relation[",greatestRelation3[1],"]")
     print()
 
     # Contraste e Correlação #

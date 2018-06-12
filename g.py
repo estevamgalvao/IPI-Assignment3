@@ -158,10 +158,9 @@ testFeaturesArray = [[3.21061321e+02, 8.96041364e-01, 2.04813023e-04, 0.00000000
  [3.62702896e+01, 9.63936272e-01, 8.62667642e-04, 0.00000000e+00],
  [3.21061321e+02, 8.96041364e-01, 2.04813023e-04, 0.00000000e+00]]
 testFeaturesArray = np.array(testFeaturesArray, dtype = np.float64)
-confusionMatrix = np.array((
-               [[0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]]), dtype= np.uint8)
+
+confusionMatrix = np.zeros((3, 3), dtype=np.uint8)
+safetyMatrix = np.zeros((2, 2), dtype=np.uint8)
 
 height, width = testFeaturesArray.shape
 print(height)
@@ -197,21 +196,74 @@ for i in range(height):
     asphaltCounter = 0
     dangerCounter = 0
     grassCounter = 0
-    for counter in range(15):
-        if distanceList[counter][1] == 0:
-            asphaltCounter += 1
-        elif distanceList[counter][1] == 1:
-            dangerCounter += 1
-        elif distanceList[counter][1] == 2:
-            grassCounter += 1
-    auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
-    auxList.sort()
-    confusionMatrix[auxList[2][1], flag2] += 1
-    distanceList = []
+    if flag2 == 1:
+        for counter in range(8):
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[auxList[2][1], flag2] += 1
+        distanceList = []
+    elif flag2 == 2:
+        for counter in range(9):
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[auxList[2][1], flag2] += 1
+        distanceList = []
+    else:
+        for counter in range(15):
+            if distanceList[counter][1] == 0:
+                asphaltCounter += 1
+            elif distanceList[counter][1] == 1:
+                dangerCounter += 1
+            elif distanceList[counter][1] == 2:
+                grassCounter += 1
+        auxList = [(asphaltCounter, 0), (dangerCounter, 1), (grassCounter, 2)]
+        auxList.sort()
+        confusionMatrix[auxList[2][1], flag2] += 1
+        distanceList = []
 
 precision = float((confusionMatrix[0, 0] + confusionMatrix[1,1] + confusionMatrix[2, 2])/np.sum(confusionMatrix))
 
+safetyMatrix[0, 0] = confusionMatrix[0,0]
+safetyMatrix[0, 1] = confusionMatrix[0, 1] + confusionMatrix[0, 2]
+safetyMatrix[1, 0] = confusionMatrix[1, 0] + confusionMatrix[2, 0]
+safetyMatrix[1, 1] = confusionMatrix[1, 1] + confusionMatrix[1, 2] + confusionMatrix[2, 1] + confusionMatrix[2, 2]
+
+print(safetyMatrix)
 print(confusionMatrix)
+
+precisionSafe = safetyMatrix[0, 0]
+precisionSafe /= float(np.sum(safetyMatrix[0]))
+
+recallSafe = safetyMatrix[0, 0]
+recallSafe /= float(np.sum(safetyMatrix[:, 0]))
+
+precisionUnsafe = safetyMatrix[1, 1]
+precisionUnsafe /= float(np.sum(safetyMatrix[1]))
+
+recallUnsafe = safetyMatrix[1, 1]
+recallUnsafe /= float(np.sum(safetyMatrix[:, 1]))
+
+print("Real           \tSafe\tUnsafe")
+print("Classified")
+print("Safe\t        %d\t    %d" % (safetyMatrix[0, 0], safetyMatrix[0, 1]))
+print("Unsafe\t        %d\t    %d" % (safetyMatrix[1, 0], safetyMatrix[1, 1]))
+F_measureSafe = 2 * (precisionSafe * recallSafe) / (precisionSafe + recallSafe)
+F_measureUnsafe = 2 * (precisionUnsafe * recallUnsafe) / (precisionUnsafe + recallUnsafe)
+print("\nF-Measure Safe: %.2f%%" % (F_measureSafe))
+print("F-Measure Unsafe: %.2f%%" % (F_measureUnsafe))
+
 print("\nReal           \tAsphalt\tDanger\tGrass")
 print("Classified")
 print("Asphalt\t        %d\t    %d\t    %d" %(confusionMatrix[0,0], confusionMatrix[0,1], confusionMatrix[0,2]))
@@ -219,6 +271,8 @@ print("Danger\t        %d\t    %d\t    %d" %(confusionMatrix[1,0], confusionMatr
 print("Grass\t        %d\t    %d\t    %d" %(confusionMatrix[2,0], confusionMatrix[2,1], confusionMatrix[2,2]))
 print("\nPrecision: %.2f%%" %(precision))
 b = datetime.datetime.now()
+
+
 
 # print((b.hour-a.hour),"h",(b.minute-a.minute),"m",(b.second-a.second),"s")
 
