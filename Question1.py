@@ -160,7 +160,10 @@ b = datetime.datetime.now()
 
 safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
 
+safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
+print('         - CONFUSION MATRIX - \n')
 printConfusionMatrix(confusionMatrix)
+print('\n          - SAFETY MATRIX - \n')
 printSafetyMatrix(safetyMatrix, F_measureSafe, F_measureUnsafe)
 
-print("The program took %d hours, %d minutes and %d seconds to finish the classification"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))
+print("\nThe program took %d hours, %d minutes and %d seconds to finish the classification"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))

@@ -1,5 +1,11 @@
 import numpy as np
 import datetime
+from functions.rgb_greyscale import RGB2Greyscale
+from functions.featureSelection import featureRelation
+from functions.fmeasure import F_measure
+from functions.featuresExtraction import *
+from functions.glcm import *
+from functions.miscellaneous import *
 a = datetime.datetime.now()
 # ...wait a while...
 
@@ -233,47 +239,23 @@ for i in range(height):
         confusionMatrix[auxList[2][1], flag2] += 1
         distanceList = []
 
-precision = float((confusionMatrix[0, 0] + confusionMatrix[1,1] + confusionMatrix[2, 2])/np.sum(confusionMatrix))
+# print(safetyMatrix)
+# print(confusionMatrix)
 
-safetyMatrix[0, 0] = confusionMatrix[0,0]
-safetyMatrix[0, 1] = confusionMatrix[0, 1] + confusionMatrix[0, 2]
-safetyMatrix[1, 0] = confusionMatrix[1, 0] + confusionMatrix[2, 0]
-safetyMatrix[1, 1] = confusionMatrix[1, 1] + confusionMatrix[1, 2] + confusionMatrix[2, 1] + confusionMatrix[2, 2]
-
-print(safetyMatrix)
-print(confusionMatrix)
-
-precisionSafe = safetyMatrix[0, 0]
-precisionSafe /= float(np.sum(safetyMatrix[0]))
-
-recallSafe = safetyMatrix[0, 0]
-recallSafe /= float(np.sum(safetyMatrix[:, 0]))
-
-precisionUnsafe = safetyMatrix[1, 1]
-precisionUnsafe /= float(np.sum(safetyMatrix[1]))
-
-recallUnsafe = safetyMatrix[1, 1]
-recallUnsafe /= float(np.sum(safetyMatrix[:, 1]))
-
-print("Real           \tSafe\tUnsafe")
-print("Classified")
-print("Safe\t        %d\t    %d" % (safetyMatrix[0, 0], safetyMatrix[0, 1]))
-print("Unsafe\t        %d\t    %d" % (safetyMatrix[1, 0], safetyMatrix[1, 1]))
-F_measureSafe = 2 * (precisionSafe * recallSafe) / (precisionSafe + recallSafe)
-F_measureUnsafe = 2 * (precisionUnsafe * recallUnsafe) / (precisionUnsafe + recallUnsafe)
-print("\nF-Measure Safe: %.2f%%" % (F_measureSafe))
-print("F-Measure Unsafe: %.2f%%" % (F_measureUnsafe))
-
-print("\nReal           \tAsphalt\tDanger\tGrass")
-print("Classified")
-print("Asphalt\t        %d\t    %d\t    %d" %(confusionMatrix[0,0], confusionMatrix[0,1], confusionMatrix[0,2]))
-print("Danger\t        %d\t    %d\t    %d" %(confusionMatrix[1,0], confusionMatrix[1,1], confusionMatrix[1,2]))
-print("Grass\t        %d\t    %d\t    %d" %(confusionMatrix[2,0], confusionMatrix[2,1], confusionMatrix[2,2]))
-print("\nPrecision: %.2f%%" %(precision))
+safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
+# print('######################################')
+print('         - CONFUSION MATRIX - \n')
+printConfusionMatrix(confusionMatrix)
+print()
+# print('######################################\n')
+# print('######################################')
+print('          - SAFETY MATRIX - \n')
+printSafetyMatrix(safetyMatrix, F_measureSafe, F_measureUnsafe)
+# print('######################################')
 b = datetime.datetime.now()
 
 
 
 # print((b.hour-a.hour),"h",(b.minute-a.minute),"m",(b.second-a.second),"s")
 
-print("O programa levou %d horas, %d minutos e %d segundos para executar"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))
+print("\nO programa levou %d horas, %d minutos e %d segundos para executar"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))
