@@ -68,11 +68,6 @@ testFeaturesArray = np.array(testFeaturesArray, dtype = np.float32)
 # CÁLCULO DAS DISTÂNCIAS E CLASSIFICAÇÃO DAS IMAGENS #
 ######################################################
 
-# confusionMatrix = np.array((
-#                [[0, 0, 0],
-#                 [0, 0, 0],
-#                 [0, 0, 0]]), dtype= np.uint8)
-
 confusionMatrix = np.zeros((3, 3), dtype=np.uint8)
 
 height, width = testFeaturesArray.shape
@@ -160,7 +155,6 @@ b = datetime.datetime.now()
 
 safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
 
-safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
 print('         - CONFUSION MATRIX - \n')
 printConfusionMatrix(confusionMatrix)
 print('\n          - SAFETY MATRIX - \n')
