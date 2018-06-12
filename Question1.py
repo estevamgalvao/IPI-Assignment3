@@ -151,9 +151,8 @@ for i in range(height):
         confusionMatrix[
             auxList[2][1], flagTrue] += 1  # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
         distanceList = []
-b = datetime.datetime.now()
-
 safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
+b = datetime.datetime.now()
 
 print('         - CONFUSION MATRIX - \n')
 printConfusionMatrix(confusionMatrix)
