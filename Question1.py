@@ -9,11 +9,11 @@ from functions.featuresExtraction import *
 from functions.glcm import *
 from functions.miscellaneous import *
 
-#/home/estevamgalvao/Documentos/UnB/5º Semestre/Introdução ao Processamento de Imagens/ImageProcessing/Assignments/Assignment 3/Images/train
-
 adress = input("Train images adress: ")
 typeImg = input("Train images type: ")
+
 a = datetime.datetime.now()
+
 adress = confirmAdress(adress, typeImg)
 
 # Leio as imagens da pasta e salvo em uma lista. Logo após recupero o número de imagens lidas #
@@ -43,8 +43,13 @@ trainFeaturesArray = np.array(trainFeaturesArray, dtype = np.float32)
 # Descubro qual feature devo ignorar #
 featureRelation(trainFeaturesArray)
 
+b = datetime.datetime.now()
+
 adress = input("Test images adress: ")
 typeImg = input("Test images type: ")
+
+c = datetime.datetime.now()
+
 adress = confirmAdress(adress, typeImg)
 
 imageArray = [cv2.imread(file) for file in glob.glob(adress)]
@@ -152,11 +157,12 @@ for i in range(height):
             auxList[2][1], flagTrue] += 1  # Marco isso na matriz com a flag que eu classifiquei e a flag de verdade #
         distanceList = []
 safetyMatrix, F_measureSafe, F_measureUnsafe = F_measure(confusionMatrix)
-b = datetime.datetime.now()
+
+d = datetime.datetime.now()
 
 print('         - CONFUSION MATRIX - \n')
 printConfusionMatrix(confusionMatrix)
 print('\n          - SAFETY MATRIX - \n')
 printSafetyMatrix(safetyMatrix, F_measureSafe, F_measureUnsafe)
 
-print("\nThe program took %d hours, %d minutes and %d seconds to finish the classification"%(abs(b.hour-a.hour), abs(b.minute-a.minute), abs(b.second-a.second)))
+print("\nThe program took %d hours, %d minutes and %d seconds to finish the classification"%(abs(b.hour-a.hour) + abs(d.hour-c.hour), abs(b.minute-a.minute) + abs(d.minute-c.minute), abs(b.second-a.second) + abs(d.second-c.second)))
